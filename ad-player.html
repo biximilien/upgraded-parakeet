@@ -67,6 +67,7 @@
               () => {
                 playingAd = false;
                 clearAd();
+                popAd(ad.id);
               },
               adDuration * 1000 - 50
             ); // Convert seconds to milliseconds
@@ -86,10 +87,25 @@
         player.innerHTML = "";
       };
 
+      const popAd = (requestId) => {
+        setTimeout(() => {
+          fetch("http://localhost:9292/api/pop/" + requestId, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Origin: "http://localhost:9292",
+            },
+          })
+            .then(() => {
+              console.log("Ad PoP'd!");
+            })
+            .catch((error) => console.error("Error pop'ing ad:", error));
+        }, 500);
+      };
+
       window.onload = function () {
         timer = setInterval(() => {
           if (!playingAd) {
-            // clearAd();
             getAd();
           }
         }, 5000); // main loop is on a 5 second period
